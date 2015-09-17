@@ -1,0 +1,13 @@
+﻿Build started 17/09/2015 11:24:00 a.m..
+     1>Project "H:\My Documents\GitHub\Nexus\Nexus\Nexus.vcxproj" on node 2 (build target(s)).
+     1>InitializeBuildStatus:
+         Creating "Debug\Nexus.unsuccessfulbuild" because "AlwaysCreate" was specified.
+       ClCompile:
+         c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /Od /Oy- /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt board.cpp
+         board.cpp
+     1>h:\my documents\github\nexus\nexus\board.cpp(7): error C3861: 'memset': identifier not found
+     1>Done Building Project "H:\My Documents\GitHub\Nexus\Nexus\Nexus.vcxproj" (build target(s)) -- FAILED.
+
+Build FAILED.
+
+Time Elapsed 00:00:02.28

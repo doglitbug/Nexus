@@ -59,7 +59,6 @@ void board::addBalls(){
 
 	//Add 3 balls or less if that is all the room that is left
 	//TODO integer literal!
-	//TODO test when 2 spaces left, 1 space left and no spaces left
 	int numberToAdd=(freeSquares.size()<3)?freeSquares.size():3;
 	//Loop through and add a ball
 	for (int i=0;i<numberToAdd;i++){
@@ -76,11 +75,7 @@ void board::addBalls(){
 /// Checks a given point is with in bounds for the board
 /// </summary>
 /// <param name="location">location to check</param>
-/// <returns>true within bounds/false otherwise</returns>
+/// <returns>True within bounds/false otherwise</returns>
 bool board::checkBounds(point location){
-	 if (location.x<0 || location.x>BOARD_SIZE || location.y<0 || location.y>BOARD_SIZE){
-		 return false;
-	 } else {
-		 return true;
-	 }
+	 return !(location.x<0 || location.x>BOARD_SIZE || location.y<0 || location.y>BOARD_SIZE);
 }

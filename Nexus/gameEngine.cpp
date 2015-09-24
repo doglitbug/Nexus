@@ -24,3 +24,21 @@ void gameEngine::drawBoard(){
 	}
 }
 
+void gameEngine::input(){
+	point mouse=mSDLLib->getMouseClick();
+	point grid;
+	//Check a click happened
+	if (mouse.x!=NULL){
+		//Check click was on the board
+		if (mouse.x<BOARD_SIZE*BALL_SIZE && mouse.y<BOARD_SIZE*BALL_SIZE){
+			grid.x=mouse.x/BALL_SIZE;
+			grid.y=mouse.y/BALL_SIZE;
+
+			printf("Board click\n");
+			printf("X: %d Y %d\n",grid.x,grid.y);
+			mBoard->addBalls();
+		} else {
+			printf("X: %d Y %d\n",mouse.x,mouse.y);
+		}
+	}
+}

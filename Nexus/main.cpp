@@ -17,13 +17,29 @@ int main(){
 	//Game engine
 	gameEngine mGameEngine(&mBoard, &mSDLLib);
 
-	mBoard.addBalls();
+	//Main game loop flag
+	bool gameOver=false;
+	bool exitGame=false;
 
-	mGameEngine.drawBoard();
+	//Game loop
+	while(!exitGame){
+		while(!gameOver){
+			//Check for gameover
+			//TODO
 
-	mSDLLib.updateScreen();
+			//Get input
+			//TODO checking mouse event
+			mGameEngine.input();
 
-	SDL_Delay(2000);
+			//Draw board
+			mGameEngine.drawBoard();
+			mSDLLib.updateScreen();
+
+		}
+		//TODO End of game
+		printf("Game over");
+		//TODO Check for new game
+	}
 
 	return 0;
 }

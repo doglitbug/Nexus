@@ -89,3 +89,21 @@ void SDLLib::drawBall(point location, int pBallNumber){
 void SDLLib::updateScreen(){
 	SDL_UpdateWindowSurface( gWindow );
 }
+
+/// <summary>
+/// Returns a point that has been clicked on
+/// </summary>
+/// <returns></returns>
+point SDLLib::getMouseClick(){
+	point temp=point(NULL,NULL);
+	SDL_Event e;
+	while (SDL_PollEvent(&e)){
+		switch(e.type){
+		case SDL_MOUSEBUTTONDOWN:
+			temp.x=e.motion.x;
+			temp.y=e.motion.y;
+			break;
+		}
+	}
+	return temp;
+}

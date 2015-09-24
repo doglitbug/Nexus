@@ -3,6 +3,7 @@
 
 #include "board.h"
 #include "SDLLib.h"
+#include "common.h"
 
 class gameEngine
 {
@@ -11,7 +12,7 @@ public:
 	~gameEngine();
 
 	void drawBoard();							//Draws the board to the screen
-
+	void input();								//Attempt to deal with game input
 private:
 	board *mBoard;
 	SDLLib *mSDLLib;

@@ -17,6 +17,7 @@ public:
 	~SDLLib();										//Destructor
 	void drawBall(point location, int ballNumber);	//Draw a ball at grid location
 	void updateScreen();							//Updates the screen
+	point getMouseClick();							//checks event queue for a mouse click
 private:
 	void loadMedia();								//Loads the images for use
 };

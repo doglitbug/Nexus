@@ -6,11 +6,11 @@ board::board(){
 }
 
 void board::resetBoard(){
-	memset(mBoard,0,sizeof(mBoard[0][0]*BOARD_SIZE*BOARD_SIZE));
+	memset(mBoard,0,sizeof(mBoard));
 }
 
 int board::getCell(int pX, int pY){
-	//Check bounds of pX and pY and retunr -1 if outside of the board
+	//Check bounds of pX and pY and return -1 if outside of the board
 	if (pX<0 || pX>BOARD_SIZE || pY<0 || pY>BOARD_SIZE){
 		return -1;
 	} else {
@@ -18,10 +18,17 @@ int board::getCell(int pX, int pY){
 	}
 }
 
-void board::setCell(int pX, int pY, int contents){
+void board::setCell(int pX, int pY, int ball){
 	if (pX<0 || pX>BOARD_SIZE || pY<0 || pY>BOARD_SIZE){
 		//TODO out of bounds
 	} else {
-		mBoard[pX][pY]=contents;
+		mBoard[pX][pY]=ball;
 	}
+}
+
+void board::addBalls(){
+	//TODO: finish
+	mBoard[0][0]=2;
+	mBoard[1][1]=4;
+	mBoard[2][2]=6;
 }

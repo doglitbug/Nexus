@@ -16,7 +16,10 @@ gameEngine::~gameEngine(){
 void gameEngine::drawBoard(){
 	for (int y=0;y<BOARD_SIZE;y++){
 		for (int x=0;x<BOARD_SIZE;x++){
-			mSDLLib->drawBall(x,y,mBoard->getCell(x,y));
+			point temp;
+			temp.x=x;
+			temp.y=y;
+			mSDLLib->drawBall(temp,mBoard->getCell(temp));
 		}
 	}
 }

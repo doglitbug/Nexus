@@ -67,14 +67,13 @@ void SDLLib::loadMedia(){
 /// <summary>
 /// Draws a ball at the given co-ords
 /// </summary>
-/// <param name="pX">Board X</param>
-/// <param name="pY">board Y</param>
+/// <param name="location">Location on board</param>
 /// <param name="pBallNumber">Ball number</param>
-void SDLLib::drawBall(int pX, int pY, int pBallNumber){
+void SDLLib::drawBall(point location, int pBallNumber){
 	//Cerate SDL Rectangle for the ball img to draw to the screen
 	SDL_Rect DestR;
-	DestR.x=pX*BALL_SIZE;
-	DestR.y=pY*BALL_SIZE;
+	DestR.x=location.x*BALL_SIZE;
+	DestR.y=location.y*BALL_SIZE;
 	DestR.h=DestR.w=BALL_SIZE;
 	//Check for drawing the selected image instead of a ball
 	if (pBallNumber==-1){

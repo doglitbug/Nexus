@@ -16,31 +16,26 @@ void board::resetBoard(){
 }
 
 /// <summary>
-/// Find contents of a given cell 
+/// Find contents of a given location
 /// </summary>
-/// <param name="pX">Board X</param>
-/// <param name="pY">Board Y</param>
+/// <param name="location">Location on board</param>
 /// <returns>Ball number</returns>
-int board::getCell(int pX, int pY){
-	//Check bounds of pX and pY and return -1 if outside of the board
-	if (pX<0 || pX>BOARD_SIZE || pY<0 || pY>BOARD_SIZE){
-		return -1;
+int board::getCell(point location){
+	if (checkBounds(location)){
+		return mBoard[location.x][location.y];
 	} else {
-		return mBoard[pX][pY];
+		return -1;
 	}
 }
 
 /// <summary>
 /// Store a ball at the given location
 /// </summary>
-/// <param name="pX">Board x</param>
-/// <param name="pY">Board y</param>
+/// <param name="location">Location on board</param>
 /// <param name="ball">Ball number</param>
-void board::setCell(int pX, int pY, int ball){
-	if (pX<0 || pX>BOARD_SIZE || pY<0 || pY>BOARD_SIZE){
-		//TODO out of bounds?
-	} else {
-		mBoard[pX][pY]=ball;
+void board::setCell(point location, int ball){
+	if (checkBounds(location)){
+		mBoard[location.x][location.y]=ball;
 	}
 }
 
@@ -48,9 +43,27 @@ void board::setCell(int pX, int pY, int ball){
 /// Add 3 radom balls the the board in random locations
 /// </summary>
 void board::addBalls(){
+
+
+
 	//TODO: finish
 	//TODO: return -1 if unsuccessful???
 	mBoard[0][0]=2;
 	mBoard[1][1]=4;
 	mBoard[2][2]=6;
+
+	
+}
+
+/// <summary>
+/// Checks a given point is with in bounds for the board
+/// </summary>
+/// <param name="location">location to check</param>
+/// <returns>true within bounds/false otherwise</returns>
+bool board::checkBounds(point location){
+	 if (location.x<0 || location.x>BOARD_SIZE || location.y<0 || location.y>BOARD_SIZE){
+		 return false;
+	 } else {
+		 return true;
+	 }
 }

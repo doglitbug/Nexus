@@ -20,5 +20,6 @@ public:
 	point getMouseClick();							//checks event queue for a mouse click
 private:
 	void loadMedia();								//Loads the images for use
+	//TODO: media?
 };
 #endif

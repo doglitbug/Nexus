@@ -3,6 +3,11 @@
 gameEngine::gameEngine(board *pBoard, SDLLib *pSDLLib){
 	mBoard=pBoard;
 	mSDLLib=pSDLLib;
+	selected=false;
+	selectedFlash=true;
+
+	selectedLocation=point(1,1);
+	unsigned long mTime1 = SDL_GetTicks();
 }
 
 gameEngine::~gameEngine(){
@@ -19,12 +24,32 @@ void gameEngine::drawBoard(){
 			point temp;
 			temp.x=x;
 			temp.y=y;
+
 			mSDLLib->drawBall(temp,mBoard->getCell(temp));
 		}
 	}
+
+	//Check for selected
+
+	//Check timer
+	unsigned long mTime2 = SDL_GetTicks();
+	if ((mTime2-mTime1)>400){		
+		//Reset timer
+		mTime1=SDL_GetTicks();
+		selectedFlash=!selectedFlash;
+	}
+
+	//Draw selected if need be
+	if (selected && selectedFlash){
+		mSDLLib->drawBall(selectedLocation,NUMBER_BALLS+1);
+	}
 }
 
+/// <summary>
+/// Deal with game input
+/// </summary>
 void gameEngine::input(){
+	//TODO: integrate keyboard as well?
 	point mouse=mSDLLib->getMouseClick();
 	point grid;
 	//Check a click happened
@@ -37,8 +62,14 @@ void gameEngine::input(){
 			printf("Board click\n");
 			printf("X: %d Y %d\n",grid.x,grid.y);
 			mBoard->addBalls();
+			selected=true;
+			selectedLocation=grid;
 		} else {
 			printf("X: %d Y %d\n",mouse.x,mouse.y);
 		}
 	}
+}
+
+void gameEngine::doMouseClick(point location){
+	
 }

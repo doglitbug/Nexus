@@ -29,8 +29,6 @@ void gameEngine::drawBoard(){
 		}
 	}
 
-	//Check for selected
-
 	//Check timer
 	unsigned long mTime2 = SDL_GetTicks();
 	if ((mTime2-mTime1)>400){		
@@ -41,7 +39,7 @@ void gameEngine::drawBoard(){
 
 	//Draw selected if need be
 	if (selected && selectedFlash){
-		mSDLLib->drawBall(source,NUMBER_BALLS+1);
+		mSDLLib->drawBall(source,SELECTED);
 	}
 }
 
@@ -77,23 +75,31 @@ void gameEngine::doMouseClick(point target){
 	//Check nothing is already selected
 	if (!selected){
 		//If there is a ball, make it the selected one
-		if (mBoard->getCell(target)!=0){
+		if (mBoard->getCell(target)!=FREE){
 			selected=true;
 			source=target;
+			//Clear possible locations and find new ones
+			mBoard->clearPossible();
+			mBoard->findPossible(source);
 		}
 		//else if we are selected and click on an empty spot
-	} else if (mBoard->getCell(target)==0){
+	} else if (mBoard->getCell(target)==POSSIBLE){
 		//TODO check pathfinding and actually move ball
 		printf("Move from (%d,%d) to (%d,%d)\n",source.x,source.y,target.x,target.y);
 		//Move source to target
 		mBoard->setCell(target,mBoard->getCell(source));
 		//Clear source
-		mBoard->setCell(source,0);
+		mBoard->setCell(source,FREE);
 		//Set flag as we are no longer on a selected ball
 		selected=false;
+		//Clear possible locations
+		mBoard->clearPossible();
 		mBoard->addBalls();
 	} else {
 		//Change currently selected ball
 		source=target;
+		//Clear possible locations and find new ones
+		mBoard->clearPossible();
+		mBoard->findPossible(source);
 	}
 }

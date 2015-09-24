@@ -12,7 +12,7 @@ board::board(){
 /// Resets the board for a new game
 /// </summary>
 void board::resetBoard(){
-	memset(mBoard,0,sizeof(mBoard));
+	memset(mBoard,FREE,sizeof(mBoard));
 }
 
 /// <summary>
@@ -40,7 +40,7 @@ void board::setCell(point location, int ball){
 }
 
 /// <summary>
-/// Add 3 radom balls the the board in random locations
+/// Add 3 random balls the the board in random locations
 /// </summary>
 void board::addBalls(){
 	//Create a vector of free spaces
@@ -48,7 +48,7 @@ void board::addBalls(){
 
 	for (int y=0;y<BOARD_SIZE;y++){
 		for (int x=0;x<BOARD_SIZE;x++){
-			if (mBoard[x][y]==0){
+			if (mBoard[x][y]==FREE){
 				freeSquares.push_back(point(x,y));
 			}
 		}
@@ -65,6 +65,7 @@ void board::addBalls(){
 		//Get free location
 		point location=freeSquares.at(i);
 		//Get a random ball
+		//+1 to account for the FREE cell at index 0
 		int ballNumber=rand()%(NUMBER_BALLS)+1;
 		//Store on board
 		setCell(location,ballNumber);
@@ -77,5 +78,55 @@ void board::addBalls(){
 /// <param name="location">location to check</param>
 /// <returns>True within bounds/false otherwise</returns>
 bool board::checkBounds(point location){
-	 return !(location.x<0 || location.x>BOARD_SIZE || location.y<0 || location.y>BOARD_SIZE);
+	 return !(location.x<0 || location.x>=BOARD_SIZE || location.y<0 || location.y>=BOARD_SIZE);
+}
+
+void board::findPossible(point source){
+	//Used in calculations
+	point temp;
+
+	//Check up
+	temp=source;
+	temp.y+=1;
+	if (getCell(temp)==FREE){
+		setCell(temp,POSSIBLE);
+		findPossible(temp);
+	}
+
+	//Check down
+	temp=source;
+	temp.y-=1;
+	if (getCell(temp)==FREE){
+		setCell(temp,POSSIBLE);
+		findPossible(temp);
+	}
+
+	//Check left
+	temp=source;
+	temp.x-=1;
+	if (getCell(temp)==FREE){
+		setCell(temp,POSSIBLE);
+		findPossible(temp);
+	}
+
+	//Check right
+	temp=source;
+	temp.x+=1;
+	if (getCell(temp)==FREE){
+		setCell(temp,POSSIBLE);
+		findPossible(temp);
+	}
+}
+
+/// <summary>
+/// Clears possible targets from board, replacing them with free
+/// </summary>
+void board::clearPossible(){
+	for (int y=0;y<BOARD_SIZE;y++){
+		for (int x=0;x<BOARD_SIZE;x++){
+			if (mBoard[x][y]==POSSIBLE){
+				mBoard[x][y]=FREE;
+			}
+		}
+	}
 }

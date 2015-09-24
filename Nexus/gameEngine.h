@@ -20,7 +20,7 @@ private:
 	board *mBoard;
 	SDLLib *mSDLLib;
 	bool selected;								//Is there a piece that has been selected prior to a move
-	point source;						//If so, where?
+	point source;								//If so, where?
 	bool selectedFlash;							//Are we in the flashing state?
 
 	unsigned long mTime1;						//Used for flashing the selected piece

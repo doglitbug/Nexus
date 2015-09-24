@@ -1,10 +1,11 @@
 #include "SDLLib.h"
+#include "board.h"
 
 SDL_Window* gWindow = NULL;			//The window we are rendering to
 
 SDL_Surface* gScreenSurface=NULL;	//The window surface
 
-SDL_Surface* gBalls[8];				//The coloured ball images
+SDL_Surface* gBalls[SELECTED+1];		//The coloured ball images
 									//Last image is selected image
 
 /// <summary>
@@ -55,8 +56,11 @@ void SDLLib::loadMedia(){
 	gBalls[3]=IMG_Load("img/green.png");
 	gBalls[4]=IMG_Load("img/purple.png");
 	gBalls[5]=IMG_Load("img/red.png");
-	gBalls[6]=IMG_Load("img/yellow.png");			
-	gBalls[7]=IMG_Load("img/selected.png");
+	gBalls[6]=IMG_Load("img/yellow.png");
+
+	gBalls[7]=IMG_Load("img/possible.png");
+	gBalls[8]=IMG_Load("img/selected.png");
+
 }
 
 /// <summary>
@@ -65,7 +69,7 @@ void SDLLib::loadMedia(){
 /// <param name="location">Location on board</param>
 /// <param name="pBallNumber">Ball number</param>
 void SDLLib::drawBall(point location, int pBallNumber){
-	//Cerate SDL Rectangle for the ball image to draw to the screen
+	//Create SDL Rectangle for the ball image to draw to the screen
 	SDL_Rect DestR;
 	DestR.x=location.x*BALL_SIZE;
 	DestR.y=location.y*BALL_SIZE;
@@ -85,7 +89,7 @@ void SDLLib::updateScreen(){
 /// <summary>
 /// Returns a point that has been clicked on
 /// </summary>
-/// <returns></returns>
+/// <returns>Board location clicked on</returns>
 point SDLLib::getMouseClick(){
 	point temp=point(NULL,NULL);
 	SDL_Event e;

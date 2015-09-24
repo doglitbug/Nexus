@@ -2,7 +2,14 @@
 #define _BOARD_
 
 #define BOARD_SIZE 9
+
 #define NUMBER_BALLS 6
+
+//Special images(non ball)
+#define FREE 0
+#define POSSIBLE 7
+#define SELECTED 8
+
 
 #include "common.h"
 #include <vector>
@@ -17,6 +24,8 @@ public:
 	int getCell(point location);				//Returns the contents of given cell
 	void setCell(point location, int ball);		//Sets the contents of a cell
 	void addBalls();							//Add 3 random balls to the board
+	void findPossible(point source);			//Finds possible targets for source
+	void clearPossible();						//Clears off possible targets when source is cleared
 
 private:
 	int mBoard[BOARD_SIZE][BOARD_SIZE];			//Contents of the board

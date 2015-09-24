@@ -21,6 +21,10 @@ int main(){
 	bool gameOver=false;
 	bool exitGame=false;
 
+	//TODO: remove as this is for testing
+	mBoard.addBalls();
+	mBoard.addBalls();
+
 	//Game loop
 	while(!exitGame){
 		while(!gameOver){

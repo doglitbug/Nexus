@@ -6,7 +6,7 @@ gameEngine::gameEngine(board *pBoard, SDLLib *pSDLLib){
 	selected=false;
 	selectedFlash=true;
 
-	selectedLocation=point(1,1);
+	source=point(1,1);
 	unsigned long mTime1 = SDL_GetTicks();
 }
 
@@ -41,7 +41,7 @@ void gameEngine::drawBoard(){
 
 	//Draw selected if need be
 	if (selected && selectedFlash){
-		mSDLLib->drawBall(selectedLocation,NUMBER_BALLS+1);
+		mSDLLib->drawBall(source,NUMBER_BALLS+1);
 	}
 }
 
@@ -59,17 +59,41 @@ void gameEngine::input(){
 			grid.x=mouse.x/BALL_SIZE;
 			grid.y=mouse.y/BALL_SIZE;
 
-			printf("Board click\n");
-			printf("X: %d Y %d\n",grid.x,grid.y);
-			mBoard->addBalls();
-			selected=true;
-			selectedLocation=grid;
+			doMouseClick(grid);
+
 		} else {
 			printf("X: %d Y %d\n",mouse.x,mouse.y);
 		}
 	}
 }
+/// <summary>
+/// Deal with a mouse click on the moard
+/// </summary>
+/// <param name="location">Location that was clicked</param>
+void gameEngine::doMouseClick(point target){
+	printf("Board click\n");
+	printf("X: %d Y %d\n",target.x,target.y);
 
-void gameEngine::doMouseClick(point location){
-	
+	//Check nothing is already selected
+	if (!selected){
+		//If there is a ball, make it the selected one
+		if (mBoard->getCell(target)!=0){
+			selected=true;
+			source=target;
+		}
+		//else if we are selected and click on an empty spot
+	} else if (mBoard->getCell(target)==0){
+		//TODO check pathfinding and actually move ball
+		printf("Move from (%d,%d) to (%d,%d)\n",source.x,source.y,target.x,target.y);
+		//Move source to target
+		mBoard->setCell(target,mBoard->getCell(source));
+		//Clear source
+		mBoard->setCell(source,0);
+		//Set flag as we are no longer on a selected ball
+		selected=false;
+		mBoard->addBalls();
+	} else {
+		//Change currently selected ball
+		source=target;
+	}
 }

@@ -8,6 +8,9 @@ SDL_Surface* gBalls[7];				//The coloured ball images
 
 SDL_Surface* gSelected = NULL;		//Selected ball image
 
+/// <summary>
+/// Sets up SDL subsystems
+/// </summary>
 SDLLib::SDLLib(){
 	//Init
 	SDL_Init(SDL_INIT_EVERYTHING);
@@ -18,16 +21,13 @@ SDLLib::SDLLib(){
 	//Create surface for window
 	gScreenSurface = SDL_GetWindowSurface( gWindow );
 
-	//Initialize renderer color
-	//SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF );
-
-	//Clear window
-	//SDL_RenderClear(gRenderer);
-
 	//Load media
 	loadMedia();
 }
 
+/// <summary>
+/// Frees up allocated resources
+/// </summary>
 SDLLib::~SDLLib(){
 	//Deallocate surfaces
 	for (int i=0;i<7;i++){
@@ -47,7 +47,9 @@ SDLLib::~SDLLib(){
 	SDL_Quit();
 
 }
-
+/// <summary>
+/// Loads all the image files into an array for drawing
+/// </summary>
 void SDLLib::loadMedia(){
 	//Load ball images
 	gBalls[0]=IMG_Load("img/free.png");
@@ -62,16 +64,29 @@ void SDLLib::loadMedia(){
 	gSelected=IMG_Load("img/selected.png");
 }
 
+/// <summary>
+/// Draws a ball at the given co-ords
+/// </summary>
+/// <param name="pX">Board X</param>
+/// <param name="pY">board Y</param>
+/// <param name="pBallNumber">Ball number</param>
 void SDLLib::drawBall(int pX, int pY, int pBallNumber){
 	//Cerate SDL Rectangle for the ball img to draw to the screen
 	SDL_Rect DestR;
 	DestR.x=pX*BALL_SIZE;
 	DestR.y=pY*BALL_SIZE;
 	DestR.h=DestR.w=BALL_SIZE;
-
-	SDL_BlitSurface(gBalls[pBallNumber], NULL, gScreenSurface, &DestR);
+	//Check for drawing the selected image instead of a ball
+	if (pBallNumber==-1){
+		SDL_BlitSurface(gSelected, NULL, gScreenSurface, &DestR);
+	} else {
+		SDL_BlitSurface(gBalls[pBallNumber], NULL, gScreenSurface, &DestR);
+	}
 }
 
+/// <summary>
+/// Force SDL to update changes to the screen
+/// </summary>
 void SDLLib::updateScreen(){
 	SDL_UpdateWindowSurface( gWindow );
 }

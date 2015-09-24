@@ -10,6 +10,9 @@ gameEngine::~gameEngine(){
 	mSDLLib=NULL;
 }
 
+/// <summary>
+/// Draw the game board
+/// </summary>
 void gameEngine::drawBoard(){
 	for (int y=0;y<BOARD_SIZE;y++){
 		for (int x=0;x<BOARD_SIZE;x++){

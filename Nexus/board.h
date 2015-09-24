@@ -5,6 +5,8 @@
 #define NUMBER_BALLS 6
 
 #include "common.h"
+#include <vector>
+#include <algorithm>
 
 class board
 {

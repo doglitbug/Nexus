@@ -1,8 +1,13 @@
 #include "SDLLib.h"
 #include "board.h"
 #include "gameEngine.h"
+#include <time.h>
+
 
 int main(){
+	//Init randomizer
+	srand((unsigned)time(NULL));
+
 	//SDL library
 	SDLLib mSDLLib;
 

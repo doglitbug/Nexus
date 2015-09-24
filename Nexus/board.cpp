@@ -43,16 +43,33 @@ void board::setCell(point location, int ball){
 /// Add 3 radom balls the the board in random locations
 /// </summary>
 void board::addBalls(){
+	//Create a vector of free spaces
+	std::vector<point> freeSquares;
 
+	for (int y=0;y<BOARD_SIZE;y++){
+		for (int x=0;x<BOARD_SIZE;x++){
+			if (mBoard[x][y]==0){
+				freeSquares.push_back(point(x,y));
+			}
+		}
+	}
 
+	//Randomize the vector
+	std::random_shuffle(freeSquares.begin(),freeSquares.end());
 
-	//TODO: finish
-	//TODO: return -1 if unsuccessful???
-	mBoard[0][0]=2;
-	mBoard[1][1]=4;
-	mBoard[2][2]=6;
-
-	
+	//Add 3 balls or less if that is all the room that is left
+	//TODO integer literal!
+	//TODO test when 2 spaces left, 1 space left and no spaces left
+	int numberToAdd=(freeSquares.size()<3)?freeSquares.size():3;
+	//Loop through and add a ball
+	for (int i=0;i<numberToAdd;i++){
+		//Get free location
+		point location=freeSquares.at(i);
+		//Get a random ball
+		int ballNumber=rand()%(NUMBER_BALLS)+1;
+		//Store on board
+		setCell(location,ballNumber);
+	}
 }
 
 /// <summary>

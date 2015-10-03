@@ -69,6 +69,9 @@ void gameEngine::input(){
 /// </summary>
 /// <param name="location">Location that was clicked</param>
 void gameEngine::doMouseClick(point target){
+	printf("Board click\n");
+	printf("X: %d Y %d\n",target.x,target.y);
+
 	//Check nothing is already selected
 	if (!selected){
 		//If there is a ball, make it the selected one
@@ -81,12 +84,8 @@ void gameEngine::doMouseClick(point target){
 		}
 		//else if we are selected and click on an empty spot
 	} else if (mBoard->getCell(target)==POSSIBLE){
-		
-		
 		//TODO check pathfinding and actually move ball
 		printf("Move from (%d,%d) to (%d,%d)\n",source.x,source.y,target.x,target.y);
-
-
 		//Move source to target
 		mBoard->setCell(target,mBoard->getCell(source));
 		//Clear source
@@ -96,7 +95,7 @@ void gameEngine::doMouseClick(point target){
 		//Clear possible locations
 		mBoard->clearPossible();
 		mBoard->addBalls();
-	} else if(mBoard->getCell(target)!=FREE){
+	} else {
 		//Change currently selected ball
 		source=target;
 		//Clear possible locations and find new ones

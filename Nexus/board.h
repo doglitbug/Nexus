@@ -10,6 +10,11 @@
 #define POSSIBLE 7
 #define SELECTED 8
 
+#define NORTH 10
+#define EAST 11
+#define SOUTH 12
+#define WEST 13
+
 
 #include "common.h"
 #include <vector>

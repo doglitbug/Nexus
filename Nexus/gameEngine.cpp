@@ -83,7 +83,7 @@ void gameEngine::doMouseClick(point target){
 			mBoard->findPossible(source);
 		}
 		//else if we are selected and click on an empty spot
-	} else if (mBoard->getCell(target)==POSSIBLE){
+	} else if (mBoard->getCell(target)>=POSSIBLE){
 		//TODO check pathfinding and actually move ball
 		printf("Move from (%d,%d) to (%d,%d)\n",source.x,source.y,target.x,target.y);
 		//Move source to target

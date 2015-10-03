@@ -80,32 +80,19 @@ void board::addBalls(){
 bool board::checkBounds(point location){
 	 return !(location.x<0 || location.x>=BOARD_SIZE || location.y<0 || location.y>=BOARD_SIZE);
 }
-
+/// <summary>
+/// 
+/// </summary>
+/// <param name="source"></param>
 void board::findPossible(point source){
 	//Used in calculations
 	point temp;
 
 	//Check up
 	temp=source;
-	temp.y+=1;
-	if (getCell(temp)==FREE){
-		setCell(temp,POSSIBLE);
-		findPossible(temp);
-	}
-
-	//Check down
-	temp=source;
 	temp.y-=1;
 	if (getCell(temp)==FREE){
-		setCell(temp,POSSIBLE);
-		findPossible(temp);
-	}
-
-	//Check left
-	temp=source;
-	temp.x-=1;
-	if (getCell(temp)==FREE){
-		setCell(temp,POSSIBLE);
+		setCell(temp,SOUTH);
 		findPossible(temp);
 	}
 
@@ -113,9 +100,27 @@ void board::findPossible(point source){
 	temp=source;
 	temp.x+=1;
 	if (getCell(temp)==FREE){
-		setCell(temp,POSSIBLE);
+		setCell(temp,WEST);
 		findPossible(temp);
 	}
+
+	//Check down
+	temp=source;
+	temp.y+=1;
+	if (getCell(temp)==FREE){
+		setCell(temp,NORTH);
+		findPossible(temp);
+	}
+
+	//Check left
+	temp=source;
+	temp.x-=1;
+	if (getCell(temp)==FREE){
+		setCell(temp,EAST);
+		findPossible(temp);
+	}
+
+	
 }
 
 /// <summary>
@@ -124,7 +129,7 @@ void board::findPossible(point source){
 void board::clearPossible(){
 	for (int y=0;y<BOARD_SIZE;y++){
 		for (int x=0;x<BOARD_SIZE;x++){
-			if (mBoard[x][y]==POSSIBLE){
+			if (mBoard[x][y]>=POSSIBLE){
 				mBoard[x][y]=FREE;
 			}
 		}

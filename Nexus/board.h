@@ -18,8 +18,6 @@
 
 
 #include "common.h"
-#include <vector>
-#include <algorithm>
 
 class board
 {

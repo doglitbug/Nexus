@@ -1,6 +1,8 @@
 #include "board.h"
 #include <string.h>
 #include <vector>
+#include <algorithm>
+
 
 /// <summary>
 /// Sets up the board for initial use
@@ -113,7 +115,7 @@ void board::findPossible(point source){
 		for (int dir=0;dir<numberOfNeighbours;dir++){
 			//Check if neighbour is a free cell
 			if (getCell(neighbours[dir])==FREE){
-				//Set cell to point to where we came from be reversing the direction number
+				//Set cell to point to where we came from by reversing the direction number
 				int oppositeDirection=((dir+numberOfNeighbours/2)%numberOfNeighbours);
 				//Add start of image arrows
 				setCell(neighbours[dir],oppositeDirection+UP);
@@ -122,6 +124,9 @@ void board::findPossible(point source){
 			}
 		}		
 	}
+
+	//Clean up
+	frontier.clear();
 }
 
 /// <summary>

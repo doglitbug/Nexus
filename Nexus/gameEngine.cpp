@@ -66,6 +66,7 @@ void gameEngine::input(){
 		}
 	}
 }
+
 /// <summary>
 /// Deal with a mouse click on the board
 /// </summary>
@@ -86,67 +87,27 @@ void gameEngine::doMouseClick(point target){
 		}
 		//else if we are selected and click on an empty spot
 	} else if (mBoard->getCell(target)>=POSSIBLE){
-		//TODO check pathfinding and actually move ball
-		printf("Move from (%d,%d) to (%d,%d)\n",source.x,source.y,target.x,target.y);
-		//Move from source to target
-		//We shall create a path from target to the source using parent directions in board.
-		//Then reverse travel the path to go from source to target and animate
 
-		//Used to hold path from target to source
-		std::vector<point> path;
+		std::vector<point> path=findPath(source, target);
 
-		//Used to walk along the path from target to source to generate path		
-		point currentPoint=target;
-
-		//Repeat until we hit the source
-
-		//Add target point to the path as the first step
-		path.push_back(target);
-
-		while(currentPoint!=source){			
-			//See which way to travel next based on contents of board
-			//Subtract UP to get direction as opposed to ball number
-			//yes I "overloaded" the board instead of creating a new array...
-			//you learn these things in RISC OS, sigh
-			switch(mBoard->getCell(currentPoint)-UP){
-			case 0://Up
-				currentPoint.y-=1;
-				break;
-			case 1://Right
-				currentPoint.x+=1;
-				break;
-			case 2://Down
-				currentPoint.y+=1;
-				break;
-			case 3://Left
-				currentPoint.x=-1;
-				break;
-			default:
-				//Should never hit unless pathfinding was corrupted
-				break;
-			}
-			//Add current point to the path
-			path.push_back(currentPoint);
-		}
-
-
-		//reverse the path
-		std::reverse(path.begin(),path.end());
+		//Save the type of ball we are moving around
 		int movementPiece=mBoard->getCell(source);
-		//travel the new path but drawing each tsep and erasing the previous one
+		//Travel the new path but drawing each step and erasing the previous one
 		int numberSteps=path.size();
 		//Start at second point as we erase the source one first loop
 		for (int step=1;step<numberSteps;step++){
-			//Erase previous
+			//Erase previous step
 			mSDLLib->drawBall(path[step-1],FREE);
 			//Draw current step
 			mSDLLib->drawBall(path[step],movementPiece);
 			//Update the visuals
 			mSDLLib->updateScreen();
-			
+
 			//Wait a bit
 			SDL_Delay(200);
 		}
+		//Clean up
+		path.clear();
 
 		//Actually move the ball!
 		mBoard->setCell(target,movementPiece);
@@ -164,4 +125,51 @@ void gameEngine::doMouseClick(point target){
 		mBoard->clearPossible();
 		mBoard->findPossible(source);
 	}
+}
+
+std::vector<point> gameEngine::findPath(point source, point target){
+	//Move from source to target
+	//We shall create a path from target to the source using parent directions in board.
+	//Then reverse travel the path to go from source to target and animate
+
+	//Used to hold path from target to source
+	std::vector<point> path;
+
+	//Used to walk along the path from target to source to generate path		
+	point currentPoint=target;
+
+	//Repeat until we hit the source
+
+	//Add target point to the path as the first step
+	path.push_back(target);
+
+	while(currentPoint!=source){			
+		//See which way to travel next based on contents of board
+		//Subtract UP to get direction as opposed to ball number
+		//yes I "overloaded" the board instead of creating a new array...
+		//you learn these things in RISC OS, sigh
+		switch(mBoard->getCell(currentPoint)-UP){
+		case 0://Up
+			currentPoint.y-=1;
+			break;
+		case 1://Right
+			currentPoint.x+=1;
+			break;
+		case 2://Down
+			currentPoint.y+=1;
+			break;
+		case 3://Left
+			currentPoint.x=-1;
+			break;
+		default:
+			//Should never hit unless pathfinding was corrupted
+			break;
+		}
+		//Add current point to the path
+		path.push_back(currentPoint);
+	}
+
+	//reverse the path
+	std::reverse(path.begin(),path.end());
+	return path;
 }

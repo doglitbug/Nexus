@@ -79,68 +79,50 @@ void board::addBalls(){
 /// <param name="location">location to check</param>
 /// <returns>True within bounds/false otherwise</returns>
 bool board::checkBounds(point location){
-	 return !(location.x<0 || location.x>=BOARD_SIZE || location.y<0 || location.y>=BOARD_SIZE);
+	return !(location.x<0 || location.x>=BOARD_SIZE || location.y<0 || location.y>=BOARD_SIZE);
 }
 /// <summary>
-/// 
+/// Shows all the possible locations that the selected ball can be placed in
+/// and create the paths require to travel to any valid place
+/// Widely adapter from: http://www.redblobgames.com/pathfinding/a-star/introduction.html
 /// </summary>
 /// <param name="source">Starting point</param>
 void board::findPossible(point source){
-	//Used in calculations
-	point temp;
-
+	//Used as a list of points to check
 	std::vector<point> frontier;
 
+	//Add starting point to list
 	frontier.push_back(source);
 
 	while(frontier.size()!=0){
-		//grab first element from list
+		//Grab first point from list
 		point current=frontier[0];
-		//Remove first from the list
+		//Remove first point from the list
 		frontier.erase(frontier.begin());
 
-		//Check all neighbours
-		//Check up
-		temp=current;
-		temp.y-=1;
-		if (getCell(temp)==FREE){
-			setCell(temp,SOUTH);
-			frontier.push_back(temp);
-		}
+		//Create neighbours in clockwise order from up
+		point neighbours[]={
+		point(current.x,current.y-1),
+		point(current.x+1,current.y),
+		point(current.x,current.y+1),
+		point(current.x-1,current.y)};
 
-		//Check right
-		temp=current;
-		temp.x+=1;
-		if (getCell(temp)==FREE){
-			setCell(temp,WEST);
-			frontier.push_back(temp);
-		}
-
-		//Check down
-		temp=current;
-		temp.y+=1;
-		if (getCell(temp)==FREE){
-			setCell(temp,NORTH);
-			frontier.push_back(temp);
-		}
-
-		//Check left
-		temp=current;
-		temp.x-=1;
-		if (getCell(temp)==FREE){
-			setCell(temp,EAST);
-			frontier.push_back(temp);
-		}
+		//Loop through each neighbour
+		//TODO Check, I think this should probably be an iterator but this works too...
+		int numberOfNeighbours=sizeof(neighbours)/sizeof(point);
+		for (int dir=0;dir<numberOfNeighbours;dir++){
+			//Check if neighbour is a free cell
+			if (getCell(neighbours[dir])==FREE){
+				//Set cell to point to where we came from be reversing the direction number
+				int oppositeDirection=((dir+numberOfNeighbours/2)%numberOfNeighbours);
+				//Add start of image arrows
+				setCell(neighbours[dir],oppositeDirection+UP);
+				//Add to frontier list for later exploration
+				frontier.push_back(neighbours[dir]);
+			}
+		}		
 	}
 }
-
-
-	//while not frontier.empty():
-	//	current = frontier.get()
-	//	for next in graph.neighbors(current):
-	//		if next not in visited:
-	//			frontier.put(next)
-	//			visited[next] = True
 
 /// <summary>
 /// Clears possible targets from board, replacing them with free

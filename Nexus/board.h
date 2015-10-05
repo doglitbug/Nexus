@@ -10,10 +10,11 @@
 #define POSSIBLE 7
 #define SELECTED 8
 
-#define NORTH 10
-#define EAST 11
-#define SOUTH 12
-#define WEST 13
+//Direction images
+#define UP 10
+#define RIGHT 11
+#define DOWN 12
+#define LEFT 13
 
 
 #include "common.h"

@@ -1,5 +1,6 @@
 #include "board.h"
 #include <string.h>
+#include <vector>
 
 /// <summary>
 /// Sets up the board for initial use
@@ -83,45 +84,63 @@ bool board::checkBounds(point location){
 /// <summary>
 /// 
 /// </summary>
-/// <param name="source"></param>
+/// <param name="source">Starting point</param>
 void board::findPossible(point source){
 	//Used in calculations
 	point temp;
 
-	//Check up
-	temp=source;
-	temp.y-=1;
-	if (getCell(temp)==FREE){
-		setCell(temp,SOUTH);
-		findPossible(temp);
-	}
+	std::vector<point> frontier;
 
-	//Check right
-	temp=source;
-	temp.x+=1;
-	if (getCell(temp)==FREE){
-		setCell(temp,WEST);
-		findPossible(temp);
-	}
+	frontier.push_back(source);
 
-	//Check down
-	temp=source;
-	temp.y+=1;
-	if (getCell(temp)==FREE){
-		setCell(temp,NORTH);
-		findPossible(temp);
-	}
+	while(frontier.size()!=0){
+		//grab first element from list
+		point current=frontier[0];
+		//Remove first from the list
+		frontier.erase(frontier.begin());
 
-	//Check left
-	temp=source;
-	temp.x-=1;
-	if (getCell(temp)==FREE){
-		setCell(temp,EAST);
-		findPossible(temp);
-	}
+		//Check all neighbours
+		//Check up
+		temp=current;
+		temp.y-=1;
+		if (getCell(temp)==FREE){
+			setCell(temp,SOUTH);
+			frontier.push_back(temp);
+		}
 
-	
+		//Check right
+		temp=current;
+		temp.x+=1;
+		if (getCell(temp)==FREE){
+			setCell(temp,WEST);
+			frontier.push_back(temp);
+		}
+
+		//Check down
+		temp=current;
+		temp.y+=1;
+		if (getCell(temp)==FREE){
+			setCell(temp,NORTH);
+			frontier.push_back(temp);
+		}
+
+		//Check left
+		temp=current;
+		temp.x-=1;
+		if (getCell(temp)==FREE){
+			setCell(temp,EAST);
+			frontier.push_back(temp);
+		}
+	}
 }
+
+
+	//while not frontier.empty():
+	//	current = frontier.get()
+	//	for next in graph.neighbors(current):
+	//		if next not in visited:
+	//			frontier.put(next)
+	//			visited[next] = True
 
 /// <summary>
 /// Clears possible targets from board, replacing them with free
@@ -135,3 +154,4 @@ void board::clearPossible(){
 		}
 	}
 }
+

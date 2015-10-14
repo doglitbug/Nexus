@@ -26,8 +26,12 @@ void gameEngine::drawBoard(){
 			point temp;
 			temp.x=x;
 			temp.y=y;
-
-			mSDLLib->drawBall(temp,mBoard->getCell(temp));
+			//Remove arrows
+			int ballToDraw=mBoard->getCell(temp);
+			if (ballToDraw>POSSIBLE){
+				ballToDraw=POSSIBLE;
+			}
+			mSDLLib->drawBall(temp,ballToDraw);
 		}
 	}
 
@@ -78,17 +82,23 @@ void gameEngine::doMouseClick(point target){
 	//Check nothing is already selected
 	if (!selected){
 		//If there is a ball, make it the selected one
-		if (mBoard->getCell(target)!=FREE){
+		if ((mBoard->getCell(target)>FREE) && (mBoard->getCell(target)<=NUMBER_BALLS)){
 			selected=true;
 			source=target;
 			//Clear possible locations and find new ones
 			mBoard->clearPossible();
 			mBoard->findPossible(source);
 		}
-		//else if we are selected and click on an empty spot
+		//else if we are selected and click on a possible spot
 	} else if (mBoard->getCell(target)>=POSSIBLE){
 
+		//Get the path
 		std::vector<point> path=findPath(source, target);
+
+		//Clear possible locations and pathfinding
+		mBoard->clearPossible();
+		//Redraw board so possible dots are not visible now
+		drawBoard();
 
 		//Save the type of ball we are moving around
 		int movementPiece=mBoard->getCell(source);
@@ -115,9 +125,12 @@ void gameEngine::doMouseClick(point target){
 
 		//Set flag as we are no longer on a selected ball
 		selected=false;
-		//Clear possible locations and pathfinding
-		mBoard->clearPossible();
+		
+		//Add new balls
 		mBoard->addBalls();
+	} else if (mBoard->getCell(target)==FREE) {
+		//TODO
+		//BEEP
 	} else {
 		//Change currently selected ball
 		source=target;
@@ -150,16 +163,16 @@ std::vector<point> gameEngine::findPath(point source, point target){
 		//you learn these things in RISC OS, sigh
 		switch(mBoard->getCell(currentPoint)-UP){
 		case 0://Up
-			currentPoint.y-=1;
+			currentPoint.y -= 1;
 			break;
 		case 1://Right
-			currentPoint.x+=1;
+			currentPoint.x += 1;
 			break;
 		case 2://Down
-			currentPoint.y+=1;
+			currentPoint.y += 1;
 			break;
 		case 3://Left
-			currentPoint.x=-1;
+			currentPoint.x -= 1;
 			break;
 		default:
 			//Should never hit unless pathfinding was corrupted
@@ -169,7 +182,7 @@ std::vector<point> gameEngine::findPath(point source, point target){
 		path.push_back(currentPoint);
 	}
 
-	//reverse the path
+	//Reverse the path
 	std::reverse(path.begin(),path.end());
 	return path;
 }

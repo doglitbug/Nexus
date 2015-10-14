@@ -86,7 +86,7 @@ bool board::checkBounds(point location){
 /// <summary>
 /// Shows all the possible locations that the selected ball can be placed in
 /// and create the paths require to travel to any valid place
-/// Widely adapter from: http://www.redblobgames.com/pathfinding/a-star/introduction.html
+/// Widely adapted from: http://www.redblobgames.com/pathfinding/a-star/introduction.html
 /// </summary>
 /// <param name="source">Starting point</param>
 void board::findPossible(point source){

@@ -5,7 +5,7 @@ SDL_Window* gWindow = NULL;			//The window we are rendering to
 
 SDL_Surface* gScreenSurface=NULL;	//The window surface
 
-SDL_Surface* gBalls[14];			//The coloured ball images
+SDL_Surface* gBalls[9];			//The coloured ball images
 									//Last image is selected image
 
 /// <summary>
@@ -30,7 +30,7 @@ SDLLib::SDLLib(){
 /// </summary>
 SDLLib::~SDLLib(){
 	//Deallocate surfaces
-	for (int i=0;i<14;i++){
+	for (int i=0;i<9;i++){
 		SDL_FreeSurface(gBalls[i]);
 		gBalls[i]=NULL;
 	}
@@ -60,12 +60,6 @@ void SDLLib::loadMedia(){
 
 	gBalls[7]=IMG_Load("img/possible.png");
 	gBalls[8]=IMG_Load("img/selected.png");
-
-	gBalls[10]=IMG_Load("img/up.png");
-	gBalls[11]=IMG_Load("img/right.png");
-	gBalls[12]=IMG_Load("img/down.png");
-	gBalls[13]=IMG_Load("img/left.png");
-
 }
 
 /// <summary>

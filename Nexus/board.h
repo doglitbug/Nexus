@@ -10,7 +10,7 @@
 #define POSSIBLE 7
 #define SELECTED 8
 
-//Direction images
+//Directions
 #define UP 10
 #define RIGHT 11
 #define DOWN 12

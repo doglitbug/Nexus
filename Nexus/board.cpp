@@ -1,5 +1,8 @@
 #include "board.h"
 #include <string.h>
+#include <vector>
+#include <algorithm>
+
 
 /// <summary>
 /// Sets up the board for initial use
@@ -78,44 +81,52 @@ void board::addBalls(){
 /// <param name="location">location to check</param>
 /// <returns>True within bounds/false otherwise</returns>
 bool board::checkBounds(point location){
-	 return !(location.x<0 || location.x>=BOARD_SIZE || location.y<0 || location.y>=BOARD_SIZE);
+	return !(location.x<0 || location.x>=BOARD_SIZE || location.y<0 || location.y>=BOARD_SIZE);
 }
-
+/// <summary>
+/// Shows all the possible locations that the selected ball can be placed in
+/// and create the paths require to travel to any valid place
+/// Widely adapted from: http://www.redblobgames.com/pathfinding/a-star/introduction.html
+/// </summary>
+/// <param name="source">Starting point</param>
 void board::findPossible(point source){
-	//Used in calculations
-	point temp;
+	//Used as a list of points to check
+	std::vector<point> frontier;
 
-	//Check up
-	temp=source;
-	temp.y+=1;
-	if (getCell(temp)==FREE){
-		setCell(temp,POSSIBLE);
-		findPossible(temp);
+	//Add starting point to list
+	frontier.push_back(source);
+
+	while(frontier.size()!=0){
+		//Grab first point from list
+		point current=frontier[0];
+		//Remove first point from the list
+		frontier.erase(frontier.begin());
+
+		//Create neighbours in clockwise order from up
+		point neighbours[]={
+		point(current.x,current.y-1),
+		point(current.x+1,current.y),
+		point(current.x,current.y+1),
+		point(current.x-1,current.y)};
+
+		//Loop through each neighbour
+		//TODO Check, I think this should probably be an iterator but this works too...
+		int numberOfNeighbours=sizeof(neighbours)/sizeof(point);
+		for (int dir=0;dir<numberOfNeighbours;dir++){
+			//Check if neighbour is a free cell
+			if (getCell(neighbours[dir])==FREE){
+				//Set cell to point to where we came from by reversing the direction number
+				int oppositeDirection=((dir+numberOfNeighbours/2)%numberOfNeighbours);
+				//Add start of image arrows
+				setCell(neighbours[dir],oppositeDirection+UP);
+				//Add to frontier list for later exploration
+				frontier.push_back(neighbours[dir]);
+			}
+		}		
 	}
 
-	//Check down
-	temp=source;
-	temp.y-=1;
-	if (getCell(temp)==FREE){
-		setCell(temp,POSSIBLE);
-		findPossible(temp);
-	}
-
-	//Check left
-	temp=source;
-	temp.x-=1;
-	if (getCell(temp)==FREE){
-		setCell(temp,POSSIBLE);
-		findPossible(temp);
-	}
-
-	//Check right
-	temp=source;
-	temp.x+=1;
-	if (getCell(temp)==FREE){
-		setCell(temp,POSSIBLE);
-		findPossible(temp);
-	}
+	//Clean up
+	frontier.clear();
 }
 
 /// <summary>
@@ -124,9 +135,10 @@ void board::findPossible(point source){
 void board::clearPossible(){
 	for (int y=0;y<BOARD_SIZE;y++){
 		for (int x=0;x<BOARD_SIZE;x++){
-			if (mBoard[x][y]==POSSIBLE){
+			if (mBoard[x][y]>=POSSIBLE){
 				mBoard[x][y]=FREE;
 			}
 		}
 	}
 }
+

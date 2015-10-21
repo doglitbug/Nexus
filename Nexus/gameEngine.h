@@ -4,6 +4,7 @@
 #include "board.h"
 #include "SDLLib.h"
 #include "common.h"
+#include <vector>
 
 class gameEngine
 {
@@ -24,5 +25,7 @@ private:
 	bool selectedFlash;							//Are we in the flashing state?
 
 	unsigned long mTime1;						//Used for flashing the selected piece
+
+	std::vector<point> findPath(point source, point target);	//Return a path to follow
 };
 #endif

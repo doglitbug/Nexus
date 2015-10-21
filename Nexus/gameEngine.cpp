@@ -1,4 +1,6 @@
 #include "gameEngine.h"
+#include <vector>
+#include <algorithm>    // std::reverse
 
 gameEngine::gameEngine(board *pBoard, SDLLib *pSDLLib){
 	mBoard=pBoard;
@@ -24,8 +26,12 @@ void gameEngine::drawBoard(){
 			point temp;
 			temp.x=x;
 			temp.y=y;
-
-			mSDLLib->drawBall(temp,mBoard->getCell(temp));
+			//Remove arrows
+			int ballToDraw=mBoard->getCell(temp);
+			if (ballToDraw>POSSIBLE){
+				ballToDraw=POSSIBLE;
+			}
+			mSDLLib->drawBall(temp,ballToDraw);
 		}
 	}
 
@@ -64,8 +70,9 @@ void gameEngine::input(){
 		}
 	}
 }
+
 /// <summary>
-/// Deal with a mouse click on the moard
+/// Deal with a mouse click on the board
 /// </summary>
 /// <param name="location">Location that was clicked</param>
 void gameEngine::doMouseClick(point target){
@@ -75,31 +82,107 @@ void gameEngine::doMouseClick(point target){
 	//Check nothing is already selected
 	if (!selected){
 		//If there is a ball, make it the selected one
-		if (mBoard->getCell(target)!=FREE){
+		if ((mBoard->getCell(target)>FREE) && (mBoard->getCell(target)<=NUMBER_BALLS)){
 			selected=true;
 			source=target;
 			//Clear possible locations and find new ones
 			mBoard->clearPossible();
 			mBoard->findPossible(source);
 		}
-		//else if we are selected and click on an empty spot
-	} else if (mBoard->getCell(target)==POSSIBLE){
-		//TODO check pathfinding and actually move ball
-		printf("Move from (%d,%d) to (%d,%d)\n",source.x,source.y,target.x,target.y);
-		//Move source to target
-		mBoard->setCell(target,mBoard->getCell(source));
-		//Clear source
+		//else if we are selected and click on a possible spot
+	} else if (mBoard->getCell(target)>=POSSIBLE){
+
+		//Get the path
+		std::vector<point> path=findPath(source, target);
+
+		//Clear possible locations and pathfinding
+		mBoard->clearPossible();
+		//Redraw board so possible dots are not visible now
+		drawBoard();
+
+		//Save the type of ball we are moving around
+		int movementPiece=mBoard->getCell(source);
+		//Travel the new path but drawing each step and erasing the previous one
+		int numberSteps=path.size();
+		//Start at second point as we erase the source one first loop
+		for (int step=1;step<numberSteps;step++){
+			//Erase previous step
+			mSDLLib->drawBall(path[step-1],FREE);
+			//Draw current step
+			mSDLLib->drawBall(path[step],movementPiece);
+			//Update the visuals
+			mSDLLib->updateScreen();
+
+			//Wait a bit
+			SDL_Delay(200);
+		}
+		//Clean up
+		path.clear();
+
+		//Actually move the ball!
+		mBoard->setCell(target,movementPiece);
 		mBoard->setCell(source,FREE);
+
 		//Set flag as we are no longer on a selected ball
 		selected=false;
-		//Clear possible locations
-		mBoard->clearPossible();
+		
+		//Add new balls
 		mBoard->addBalls();
+	} else if (mBoard->getCell(target)==FREE) {
+		//TODO
+		//BEEP
 	} else {
 		//Change currently selected ball
 		source=target;
-		//Clear possible locations and find new ones
+		//Clear possible locations/pathfinding and find new ones
 		mBoard->clearPossible();
 		mBoard->findPossible(source);
 	}
+}
+
+std::vector<point> gameEngine::findPath(point source, point target){
+	//Move from source to target
+	//We shall create a path from target to the source using parent directions in board.
+	//Then reverse travel the path to go from source to target and animate
+
+	//Used to hold path from target to source
+	std::vector<point> path;
+
+	//Used to walk along the path from target to source to generate path		
+	point currentPoint=target;
+
+	//Repeat until we hit the source
+
+	//Add target point to the path as the first step
+	path.push_back(target);
+
+	while(currentPoint!=source){			
+		//See which way to travel next based on contents of board
+		//Subtract UP to get direction as opposed to ball number
+		//yes I "overloaded" the board instead of creating a new array...
+		//you learn these things in RISC OS, sigh
+		switch(mBoard->getCell(currentPoint)-UP){
+		case 0://Up
+			currentPoint.y -= 1;
+			break;
+		case 1://Right
+			currentPoint.x += 1;
+			break;
+		case 2://Down
+			currentPoint.y += 1;
+			break;
+		case 3://Left
+			currentPoint.x -= 1;
+			break;
+		default:
+			//Should never hit unless pathfinding was corrupted
+			break;
+		}
+		//Add current point to the path
+		path.push_back(currentPoint);
+	}
+
+	//Reverse the path
+	std::reverse(path.begin(),path.end());
+	return path;
 }
